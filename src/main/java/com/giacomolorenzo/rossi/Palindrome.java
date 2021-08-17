@@ -1,15 +1,23 @@
-package org.giacomolorenzo.rossi;
+package com.giacomolorenzo.rossi;
 
 /**
- * Classe da instrumentare
+ * Classe da istrumentare.
+ * Per provare la coverage on-the-fly e redigere il report, usa il comando
+ * mvn -P coverageProfile clean package
+ *
+ * Se vuoi la coverage on-the-fly, ma non il report:
+ * mvn -P coverageProfile clean test
+ *
+ * Per fare il testing senza coverage, usa il comando
+ * mvn test
  */
 public class Palindrome {
     // Il costruttore di default è contato come metodo. Se lo metti privato, allora è irraggiungibile e non viene contato tra i metodi missed.
     private Palindrome(){}
 
-    public  static boolean isEven(int pari){
+    public static boolean isEven(int pari){
         if(pari % 2 == 0){
-            return Math.max(pari % 2, 0) == 0;
+            return true;
         } else {
             return false;
         }

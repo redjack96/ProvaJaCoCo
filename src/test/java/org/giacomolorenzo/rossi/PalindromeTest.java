@@ -1,5 +1,6 @@
 package org.giacomolorenzo.rossi;
 
+import com.giacomolorenzo.rossi.Palindrome;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
