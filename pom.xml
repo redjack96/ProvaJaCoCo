@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.giacomolorenzo.rossi</groupId>
+    <artifactId>prova-jacoco</artifactId>
+    <version>1.0.0</version>
+
+    <!-- Le properties sono delle variabili valide in tutto il pom e nei pom figli (bisogna specificare nei figli che il genitore è questo pom o in questo pom quali sono i moduli figli).-->
+    <properties>
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
+        <!-- Rimuove il warning sull' encoding-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- Il processo di build esegue i seguenti passi con mvn package -->
+    <!-- 1) jacoco-maven-plugin:prepare-agent: si imposta jacoco agent 0.8.5 e il file di destinazione .exec vuoto -->
+    <!-- 2) maven-resources-plugin:resources Copia eventuali risorse nella directory target-->
+    <!-- [compile]-->
+    <!-- 3) Vengono compilati tutti i file java nel package src, in target/classes -->
+    <!-- [testCompile] -->
+    <!-- 4) Vengono compilati i test in target/test-classes  -->
+    <!-- [test]  Se fai mvn test esegue solo fino qui... -->
+    <!-- 5) maven-surefire-plugin:test Esecuzione dei test d' unità  -->
+    <!-- [prepare-package] -->
+    <!-- 6) jacoco-maven-plugin:report: analizza il file jacoco.exec del bundle/progetto (prova-jacoco) e produce i file csv, xml e html del report di coverage -->
+    <!-- [package] -->
+    <!-- 7) maven-jar-plugin: Viene costruito il jar -->
+
+    <build>
+        <plugins>
+            <!-- Il plugin per i test di unità. Eseguito durante la fase test. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
+            </plugin>
+            <!--Il plugin per jacoco.-->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <!-- Con la versione 0.8.0 dava questo errore: The forked VM terminated without saying properly goodbye. VM crash or System.exit called-->
+                <!-- Con la versione 0.8.4 dava un errore causato da una incompatibilità con java 14 e Surefire Maven plugin: “Corrupted STDOUT by directly writing to native stream in forked JVM" -->
+                <version>0.8.5</version>
+                <executions>
+                    <!-- prepare-agent permette la instrumentazione on-the-fly. Viene eseguito  prima di compilare e crea una proprietà da far passare ai parametri della VM dal test runner, così da generare il codice per la coverage. -->
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!--  Eseguito durante la fase prepare-package -->
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal> <!-- Trovi il report csv/xml/html nella cartella /target/site/jacoco-->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+
+</project>
