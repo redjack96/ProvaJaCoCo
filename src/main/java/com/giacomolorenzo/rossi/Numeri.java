@@ -11,11 +11,11 @@ package com.giacomolorenzo.rossi;
  * Per fare il testing senza coverage, usa il comando
  * mvn test
  */
-public class Palindrome {
+public class Numeri {
     // Il costruttore di default è contato come metodo. Se lo metti privato, allora è irraggiungibile e non viene contato tra i metodi missed.
-    private Palindrome(){}
+    private Numeri(){}
 
-    public static boolean isEven(int pari){
+    public static boolean isPari(int pari){
         if(pari % 2 == 0){
             return true;
         } else {

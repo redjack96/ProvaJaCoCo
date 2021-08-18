@@ -1,6 +1,6 @@
 package org.giacomolorenzo.rossi;
 
-import com.giacomolorenzo.rossi.Palindrome;
+import com.giacomolorenzo.rossi.Numeri;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -15,10 +15,11 @@ import static org.junit.Assert.*;
  * Per fare il testing senza coverage, usa il comando
  * mvn test
  */
-public class PalindromeTest {
+public class NumeriTest {
     @Test
-    public void whenEmptyString_thenAccept() {
+    public void isEvenTest() {
         // assertTrue(Palindrome.isPalindrome(""));
-        assertTrue(Palindrome.isEven(2));
+        assertTrue(Numeri.isPari(4));
+        assertFalse(Numeri.isPari(3));
     }
 }
