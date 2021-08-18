@@ -18,7 +18,11 @@
         <!-- Rimuove il warning sull' encoding-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jacoco.coverageExperiment.version>0.8.5</jacoco.coverageExperiment.version>
+        <!-- Con la versione jacoco 0.8.0 dava questo errore: The forked VM terminated without saying properly goodbye. VM crash or System.exit called-->
+        <!-- Con la versione jacoco 0.8.4 dava un errore causato da una incompatibilità con java 14 e Surefire Maven plugin: “Corrupted STDOUT by directly writing to native stream in forked JVM" -->
+        <jacoco.coverageExperiment.version>0.8.6</jacoco.coverageExperiment.version>
+        <sonarscanner.version>3.9.0.2155</sonarscanner.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 
     <!-- Con il comando "mvn -P coverageProfile package", il processo di build esegue i seguenti passi -->
@@ -36,6 +40,35 @@
     <!-- 7) maven-jar-plugin: Viene costruito il jar -->
     <profiles>
         <profile>
+            <id>coverage</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>coverageProfile</id>
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -46,9 +79,6 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <!-- Con la versione 0.8.0 dava questo errore: The forked VM terminated without saying properly goodbye. VM crash or System.exit called-->
-                        <!-- Con la versione 0.8.4 dava un errore causato da una incompatibilità con java 14 e Surefire Maven plugin: “Corrupted STDOUT by directly writing to native stream in forked JVM" -->
-                        <version>${jacoco.coverageExperiment.version}</version>
                         <executions>
                             <!-- prepare-agent permette la instrumentazione on-the-fly. Viene eseguito  prima di compilare e crea una proprietà da far passare ai parametri della VM dal test runner, così da generare il codice per la coverage. -->
                             <execution>
@@ -71,6 +101,7 @@
         </profile>
     </profiles>
 
+
     <!-- Anche senza <build>, funziona tutto. -->
     <dependencies>
         <dependency>
@@ -80,6 +111,28 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>${sonarscanner.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.coverageExperiment.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 
 </project>
